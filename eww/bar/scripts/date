@@ -1,0 +1,2 @@
+#! /bin/sh
+day=$(date +%d); echo "$(date +'%A') ${day%${day#??}}$(if [[ $day =~ 1$ && $day != 11 ]]; then echo st; elif [[ $day =~ 2$ && $day != 12 ]]; then echo nd; elif [[ $day =~ 3$ && $day != 13 ]]; then echo rd; else echo th; fi) $(date +'%B, %Y')"

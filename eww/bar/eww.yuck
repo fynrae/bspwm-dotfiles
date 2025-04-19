@@ -1,0 +1,92 @@
+(defwindow bar
+    :monitor 0
+    :geometry (geometry :x "0%"
+                        :y "0.5%"
+                        :width "90%"
+                        :height "30px"
+                        :anchor "top center")
+    :windowtype "desktop"
+    :reserve (struts :distance "2.6%" :side "top")
+    :wm-ignore false 
+(bar))
+
+(deflisten wp0 `$HOME/.config/eww/bar/scripts/workspace 1`)
+(deflisten wp1 `$HOME/.config/eww/bar/scripts/workspace 2`)
+(deflisten wp2 `$HOME/.config/eww/bar/scripts/workspace 3`)
+(deflisten wp3 `$HOME/.config/eww/bar/scripts/workspace 4`)
+(deflisten wp4 `$HOME/.config/eww/bar/scripts/workspace 5`)
+(deflisten wp5 `$HOME/.config/eww/bar/scripts/workspace 6`)
+(deflisten wp6 `$HOME/.config/eww/bar/scripts/workspace 7`)
+(deflisten wp7 `$HOME/.config/eww/bar/scripts/workspace 8`)
+(deflisten wp8 `$HOME/.config/eww/bar/scripts/workspace 9`)
+(deflisten wp9 `$HOME/.config/eww/bar/scripts/workspace 10`)
+
+(defpoll time :interval "60s" `date +'%H:%S'`)
+(defpoll date :interval "10000000000000000000000000000000s" `$HOME/.config/eww/bar/scripts/date`)
+(defvar date_rev false)
+
+(defwidget bar[]
+    (box
+        :class "bar"
+        (box
+            :space-evenly false
+            :spacing 10
+            :class "workspace"
+            (eventbox
+                :onclick "xdotool set_desktop 0"
+                (label :text wp0 :halign "start" :class "wp1")
+            )
+            (eventbox
+                :onclick "xdotool set_desktop 1"
+                (label :text wp1 :halign "start")
+            )
+            (eventbox
+                :onclick "xdotool set_desktop 2"
+                (label :text wp2 :halign "start")
+            )
+            (eventbox
+                :onclick "xdotool set_desktop 3"
+                (label :text wp3 :halign "start")
+            )
+            (eventbox
+                :onclick "xdotool set_desktop 4"
+                (label :text wp4 :halign "start")
+            )
+            (eventbox
+                :onclick "xdotool set_desktop 5"
+                (label :text wp5 :halign "start")
+            )
+            (eventbox
+                :onclick "xdotool set_desktop 6"
+                (label :text wp6 :halign "start")
+            )
+            (eventbox
+                :onclick "xdotool set_desktop 7"
+                (label :text wp7 :halign "start")
+            )
+
+            (eventbox
+                :onclick "xdotool set_desktop 8"
+                (label :text wp8 :halign "start")
+            )
+            (eventbox
+                :onclick "xdotool set_desktop 9"
+                (label :text wp9 :halign "start")
+            )
+        )
+        (eventbox
+            :class "timedate"
+            :onhover "eww update date_rev=true"
+            :onhoverlost "eww update date_rev=false"
+            (box :space-evenly false :halign "end"
+                (label :class "time" :halign "end" :text time)
+                (revealer
+                    :reveal date_rev
+                    :transition "slideleft"
+                    :duration "350ms"
+                    (label :class "date" :halign "end" :text date)
+                )
+            )
+        )
+    )
+)

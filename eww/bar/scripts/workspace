@@ -1,0 +1,34 @@
+#!/bin/sh
+
+icon1=
+icon2=
+icon3=󰺕
+monitor_workspace=$1  # Workspace to monitor, as indexed by bspwm
+
+# Initial state check: Print focus and activity state
+currwp=$(xdotool get_desktop)
+if [[ $currwp -eq $(($monitor_workspace - 1)) ]]; then
+    echo $icon2  # Workspace is focused, regardless of activity
+else
+    # Check if the workspace has applications
+    if [[ $(bspc query -N -d "^$monitor_workspace" | wc -l) -gt 0 ]]; then
+        echo $icon3  # Workspace is active (has applications) but not focused
+    else
+        echo $icon1  # Workspace is not focused and empty
+    fi
+fi
+
+# Continuously check for events: Focus and active applications
+bspc subscribe node_add node_remove desktop_focus 2> /dev/null | while read line; do
+    currwp=$(xdotool get_desktop)
+    if [[ $currwp -eq $(($monitor_workspace - 1)) ]]; then
+        echo $icon2  # Workspace is focused, regardless of activity
+    else
+        # Check if the workspace has applications
+        if [[ $(bspc query -N -d "^$monitor_workspace" | wc -l) -gt 0 ]]; then
+            echo $icon3  # Workspace is active (has applications) but not focused
+        else
+            echo $icon1  # Workspace is not focused and empty
+        fi
+    fi
+done
