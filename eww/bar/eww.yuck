@@ -8,85 +8,111 @@
     :windowtype "desktop"
     :reserve (struts :distance "2.6%" :side "top")
     :wm-ignore false 
-(bar))
-
-(deflisten wp0 `$HOME/.config/eww/bar/scripts/workspace 1`)
-(deflisten wp1 `$HOME/.config/eww/bar/scripts/workspace 2`)
-(deflisten wp2 `$HOME/.config/eww/bar/scripts/workspace 3`)
-(deflisten wp3 `$HOME/.config/eww/bar/scripts/workspace 4`)
-(deflisten wp4 `$HOME/.config/eww/bar/scripts/workspace 5`)
-(deflisten wp5 `$HOME/.config/eww/bar/scripts/workspace 6`)
-(deflisten wp6 `$HOME/.config/eww/bar/scripts/workspace 7`)
-(deflisten wp7 `$HOME/.config/eww/bar/scripts/workspace 8`)
-(deflisten wp8 `$HOME/.config/eww/bar/scripts/workspace 9`)
-(deflisten wp9 `$HOME/.config/eww/bar/scripts/workspace 10`)
-
-(defpoll time :interval "60s" `date +'%H:%S'`)
-(defpoll date :interval "10000000000000000000000000000000s" `$HOME/.config/eww/bar/scripts/date`)
-(defvar date_rev false)
-
-(defwidget bar[]
-    (box
-        :class "bar"
-        (box
-            :space-evenly false
-            :spacing 10
-            :class "workspace"
-            (eventbox
-                :onclick "xdotool set_desktop 0"
-                (label :text wp0 :halign "start" :class "wp1")
-            )
-            (eventbox
-                :onclick "xdotool set_desktop 1"
-                (label :text wp1 :halign "start")
-            )
-            (eventbox
-                :onclick "xdotool set_desktop 2"
-                (label :text wp2 :halign "start")
-            )
-            (eventbox
-                :onclick "xdotool set_desktop 3"
-                (label :text wp3 :halign "start")
-            )
-            (eventbox
-                :onclick "xdotool set_desktop 4"
-                (label :text wp4 :halign "start")
-            )
-            (eventbox
-                :onclick "xdotool set_desktop 5"
-                (label :text wp5 :halign "start")
-            )
-            (eventbox
-                :onclick "xdotool set_desktop 6"
-                (label :text wp6 :halign "start")
-            )
-            (eventbox
-                :onclick "xdotool set_desktop 7"
-                (label :text wp7 :halign "start")
-            )
-
-            (eventbox
-                :onclick "xdotool set_desktop 8"
-                (label :text wp8 :halign "start")
-            )
-            (eventbox
-                :onclick "xdotool set_desktop 9"
-                (label :text wp9 :halign "start")
-            )
-        )
-        (eventbox
-            :class "timedate"
-            :onhover "eww update date_rev=true"
-            :onhoverlost "eww update date_rev=false"
-            (box :space-evenly false :halign "end"
-                (label :class "time" :halign "end" :text time)
-                (revealer
-                    :reveal date_rev
-                    :transition "slideleft"
-                    :duration "350ms"
-                    (label :class "date" :halign "end" :text date)
-                )
-            )
-        )
+    (bar)
+  )
+  
+  (deflisten wp0 `$HOME/.config/eww/bar/scripts/workspace 1`)
+  (deflisten wp1 `$HOME/.config/eww/bar/scripts/workspace 2`)
+  (deflisten wp2 `$HOME/.config/eww/bar/scripts/workspace 3`)
+  (deflisten wp3 `$HOME/.config/eww/bar/scripts/workspace 4`)
+  (deflisten wp4 `$HOME/.config/eww/bar/scripts/workspace 5`)
+  (deflisten wp5 `$HOME/.config/eww/bar/scripts/workspace 6`)
+  (deflisten wp6 `$HOME/.config/eww/bar/scripts/workspace 7`)
+  (deflisten wp7 `$HOME/.config/eww/bar/scripts/workspace 8`)
+  (deflisten wp8 `$HOME/.config/eww/bar/scripts/workspace 9`)
+  (deflisten wp9 `$HOME/.config/eww/bar/scripts/workspace 10`)
+  
+  (defpoll time :interval "60s" `date +'%H:%M'`)
+  (defpoll date :interval "10000000000000000000000000000000s" `$HOME/.config/eww/bar/scripts/date`)
+  (defvar date_rev false)
+  
+  (defpoll bat_capacity :interval "90s" `cat /sys/class/power_supply/BAT0/capacity`)
+  (deflisten bat_hex `$HOME/.config/eww/bar/scripts/battery-hex`)
+  (defvar bat_rev false)
+  
+  (defwidget battery [capacity one two three four five six seven eight nine ten]
+    (eventbox
+      (box
+        :space-evenly false
+        :spacing 8
+        (label :style "color: ${bat_hex}; font-size: 22px; padding-top: 1px"
+               :text {capacity == "" ? "N/A" :
+                      capacity < 10 ? one :
+                      capacity < 20 ? two :
+                      capacity < 30 ? three :
+                      capacity < 40 ? four :
+                      capacity < 50 ? five :
+                      capacity < 60 ? six :
+                      capacity < 70 ? seven :
+                      capacity < 80 ? eight :
+                      capacity < 90 ? nine : ten})
+      )
     )
-)
+  )
+  
+  (defwidget bar[]
+    (box
+      :class "bar"
+      
+      ;; Workspace area
+      (box
+        :space-evenly false
+        :spacing 10
+        :class "workspace"
+        (eventbox :onclick "xdotool set_desktop 0" (label :text wp0 :halign "start" :class "wp1"))
+        (eventbox :onclick "xdotool set_desktop 1" (label :text wp1 :halign "start"))
+        (eventbox :onclick "xdotool set_desktop 2" (label :text wp2 :halign "start"))
+        (eventbox :onclick "xdotool set_desktop 3" (label :text wp3 :halign "start"))
+        (eventbox :onclick "xdotool set_desktop 4" (label :text wp4 :halign "start"))
+        (eventbox :onclick "xdotool set_desktop 5" (label :text wp5 :halign "start"))
+        (eventbox :onclick "xdotool set_desktop 6" (label :text wp6 :halign "start"))
+        (eventbox :onclick "xdotool set_desktop 7" (label :text wp7 :halign "start"))
+        (eventbox :onclick "xdotool set_desktop 8" (label :text wp8 :halign "start"))
+        (eventbox :onclick "xdotool set_desktop 9" (label :text wp9 :halign "start"))
+      )
+  
+      ;; Right-aligned info section
+      (box
+        :space-evenly false
+        :halign "end"
+        :spacing 10
+  
+        ;; Battery widget
+        (eventbox
+          :class "battery"
+          :onhover "eww update bat_rev=true"
+          :onhoverlost "eww update bat_rev=false"
+          (box
+            :space-evenly false
+            (battery :capacity bat_capacity
+                     :one "󰁺" :two "󰁻" :three "󰁼" :four "󰁽" :five "󰁾"
+                     :six "󰁿" :seven "󰂀" :eight "󰂁" :nine "󰂂" :ten "󰁹")
+            (revealer
+              :reveal bat_rev
+              :transition "slideleft"
+              :duration "350ms"
+              (label :class "capacity" :halign "end" :style "padding-left: 5px":text "${bat_capacity}%")
+            )
+          )
+        )
+        (label :text "|")
+        ;; Time and date widget
+        (eventbox
+          :class "timedate"
+          :onhover "eww update date_rev=true"
+          :onhoverlost "eww update date_rev=false"
+          (box
+            :space-evenly false
+            (label :class "time" :halign "end" :text time)
+            (revealer
+              :reveal date_rev
+              :transition "slideleft"
+              :duration "350ms"
+              (label :class "date" :halign "end" :text date)
+            )
+          )
+        )
+      )
+    )
+  )
+  

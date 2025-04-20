@@ -1,0 +1,22 @@
+import pyinotify
+
+class EventHandler(pyinotify.ProcessEvent):
+    def process_IN_MODIFY(self, event):
+        if event.pathname == "/sys/class/power_supply/BAT0/capacity":
+            with open(event.pathname, "r") as file:
+                print(f"File updated: {file.read().strip()}")
+
+if __name__ == "__main__":
+    file_to_watch = "/sys/class/power_supply/BAT0/capacity"
+
+    wm = pyinotify.WatchManager()
+    handler = EventHandler()
+    notifier = pyinotify.Notifier(wm, handler)
+    wm.add_watch(file_to_watch, pyinotify.IN_MODIFY)
+
+    print(f"Monitoring changes to: {file_to_watch}")
+    try:
+        notifier.loop()
+    except KeyboardInterrupt:
+        print("Monitoring stopped.")
+

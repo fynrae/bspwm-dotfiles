@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Path to the battery info via upower
+battery_path="/org/freedesktop/UPower/devices/battery_BAT0"
+
+# Function to get battery state and print corresponding hex color
+print_color() {
+    state=$(upower -i "$battery_path" | awk '/state:/ {print $2}')
+    case "$state" in
+        charging)
+            echo "#00ff00"  # Green
+            ;;
+        discharging)
+            echo "#ffffff"  # White
+            ;;
+        *)
+            echo "#ffff00"  # Yellow for fully-charged or unknown
+            ;;
+    esac
+}
+
+# Print once at launch (for immediate EWW use)
+print_color
+
+# Listen for changes to power-related devices
+udevadm monitor --subsystem-match=power_supply | while read -r line; do
+    if echo "$line" | grep -qE 'power_supply/BAT|power_supply/AC'; then
+        print_color
+    fi
+done
